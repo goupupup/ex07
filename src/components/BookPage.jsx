@@ -11,11 +11,11 @@ const BookPage = () => {
     const [is_end, setIs_end] = useState(false);
     const [query, setQuery] = useState('리액트');
 
-    const getBooks = async() => {
+    const getData = async() => {
         const url = "https://dapi.kakao.com/v3/search/book?target=title";
         const config = {
             headers: {"Authorization": "KakaoAK b80880fbde422de3fd9b4a4e67c9bb54"},
-            params: {"query": query, "size": 6, "page": page}
+            params: {"query": query, "size": 8, "page": page}
         }
         setLoading(true);
         const result = await axios(url, config);
@@ -30,13 +30,19 @@ const BookPage = () => {
         setLoading(false);
     }
 
+    const onSubmit = (e) => {
+        e.preventDefault();
+        setPage(1);
+        getData();
+    }
+
     useEffect(()=>{
-        getBooks();
+        getData();
     },[page]);
 
     const onSearch = () => {
         setPage(1);
-        getBooks();
+        getData();
     }
 
     if(loading) return <h1 className='text-center my-5'>로딩중......</h1>
@@ -44,7 +50,7 @@ const BookPage = () => {
         <Row className='justify-content-center mx-2 my-5'>
             <h1 className='text-center mb-5'>도서검색</h1>
             <Row className='my-2'>
-                <Col xs={6} md={2}>
+                <Col xs={6} md={3}>
                     <Form onSubmit={ onSearch }>
                         <Form.Control value={query} placeholder='검색어'
                             onChange={(e)=>setQuery(e.target.value)}/>
